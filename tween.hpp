@@ -94,47 +94,47 @@ namespace tween
 
     enum TYPE
     {
-        LINEAR_01,
+        LINEAR,
 
-        QUADIN_01,          // t^2
-        QUADOUT_01,
-        QUADINOUT_01,
-        CUBICIN_01,         // t^3
-        CUBICOUT_01,
-        CUBICINOUT_01,
-        QUARTIN_01,         // t^4
-        QUARTOUT_01,
-        QUARTINOUT_01,
-        QUINTIN_01,         // t^5
-        QUINTOUT_01,
-        QUINTINOUT_01,
-        SINEIN_01,          // sin(t)
-        SINEOUT_01,
-        SINEINOUT_01,
-        EXPOIN_01,          // 2^t
-        EXPOOUT_01,
-        EXPOINOUT_01,
-        CIRCIN_01,          // sqrt(1-t^2)
-        CIRCOUT_01,
-        CIRCINOUT_01,
-        ELASTICIN_01,       // exponentially decaying sine wave
-        ELASTICOUT_01,
-        ELASTICINOUT_01,
-        BACKIN_01,          // overshooting cubic easing: (s+1)*t^3 - s*t^2
-        BACKOUT_01,
-        BACKINOUT_01,
-        BOUNCEIN_01,        // exponentially decaying parabolic bounce
-        BOUNCEOUT_01,
-        BOUNCEINOUT_01,
+        QUADIN,          // t^2
+        QUADOUT,
+        QUADINOUT,
+        CUBICIN,         // t^3
+        CUBICOUT,
+        CUBICINOUT,
+        QUARTIN,         // t^4
+        QUARTOUT,
+        QUARTINOUT,
+        QUINTIN,         // t^5
+        QUINTOUT,
+        QUINTINOUT,
+        SINEIN,          // sin(t)
+        SINEOUT,
+        SINEINOUT,
+        EXPOIN,          // 2^t
+        EXPOOUT,
+        EXPOINOUT,
+        CIRCIN,          // sqrt(1-t^2)
+        CIRCOUT,
+        CIRCINOUT,
+        ELASTICIN,       // exponentially decaying sine wave
+        ELASTICOUT,
+        ELASTICINOUT,
+        BACKIN,          // overshooting cubic easing: (s+1)*t^3 - s*t^2
+        BACKOUT,
+        BACKINOUT,
+        BOUNCEIN,        // exponentially decaying parabolic bounce
+        BOUNCEOUT,
+        BOUNCEINOUT,
 
-        SINESQUARE_01,      // gapjumper's
-        EXPONENTIAL_01,     // gapjumper's
-        SCHUBRING1_01,      // terry schubring's formula 1
-        SCHUBRING2_01,      // terry schubring's formula 2
-        SCHUBRING3_01,      // terry schubring's formula 3
+        SINESQUARE,      // gapjumper's
+        EXPONENTIAL,     // gapjumper's
+        SCHUBRING1,      // terry schubring's formula 1
+        SCHUBRING2,      // terry schubring's formula 2
+        SCHUBRING3,      // terry schubring's formula 3
 
-        SINPI2_01,          // tomas cepeda's
-        SWING_01,           // tomas cepeda's & lquery's
+        SINPI2,          // tomas cepeda's
+        SWING,           // tomas cepeda's & lquery's
 
         TOTAL,
         UNDEFINED
@@ -193,34 +193,34 @@ namespace tween
 
         switch( easetype )
         {
-        case TYPE::LINEAR_01: {
+        case TYPE::LINEAR: {
                 return t/d;
             }
 
-        case TYPE::SWING_01: {
+        case TYPE::SWING: {
                 return ((-cos(pi * t / d) / 2) + 0.5);            
             }
 
-        case TYPE::SINPI2_01:
+        case TYPE::SINPI2:
             {
                 double fDelta = t/d;
                 return sin(fDelta * 0.5f * pi);
             }
 
-        case TYPE::BACKIN_01:
+        case TYPE::BACKIN:
             {
                 double s = 1.70158f;
                 double postFix = t/=d;
                 return postFix * t * ((s + 1) * t - s);
             }
 
-        case TYPE::BACKOUT_01:
+        case TYPE::BACKOUT:
             {
                 double s = 1.70158f;
                 return 1.f * ((t = t/d-1)*t*((s+1)*t + s) + 1);
             }
 
-        case TYPE::BACKINOUT_01:
+        case TYPE::BACKINOUT:
             {
                 double s = 1.70158f;
                 if ((t/=d/2) < 1)
@@ -247,7 +247,7 @@ namespace tween
             v = 1.f*(7.5625f*(postFix)*t + .984375f); \
             }
 
-        case TYPE::BOUNCEIN_01:
+        case TYPE::BOUNCEIN:
             {
                 double v;
                 t = d-t;
@@ -255,14 +255,14 @@ namespace tween
                 return 1.f - v;
             }
 
-        case TYPE::BOUNCEOUT_01:
+        case TYPE::BOUNCEOUT:
             {
                 double v;
                 $BOUNCE(v);
                 return v;
             }
 
-        case TYPE::BOUNCEINOUT_01:
+        case TYPE::BOUNCEINOUT:
             {
                 double v;
                 if (t < d/2) {
@@ -279,16 +279,16 @@ namespace tween
 
 #       undef $BOUNCE
 
-        case TYPE::CIRCIN_01:
+        case TYPE::CIRCIN:
             t /= d;
             return 1.f - sqrt(1 - t*t);
 
-        case TYPE::CIRCOUT_01:
+        case TYPE::CIRCOUT:
             t /= d;
             t--;
             return sqrt(1 - t*t);
 
-        case TYPE::CIRCINOUT_01:
+        case TYPE::CIRCINOUT:
             t /= d/2;
             if(t < 1)
                 return -1.f/2 * (sqrt(1 - t*t) - 1);
@@ -297,7 +297,7 @@ namespace tween
             return 1.f/2 * (sqrt(1 - t*t) + 1);
 
 
-        case TYPE::ELASTICIN_01:
+        case TYPE::ELASTICIN:
             {
                 t/=d;
 
@@ -309,7 +309,7 @@ namespace tween
                 return -(postFix * sin((t*d-s)*(2*pi)/p ));
             }
 
-        case TYPE::ELASTICOUT_01:
+        case TYPE::ELASTICOUT:
             {
                 double p=d*.3f;
                 double a=1.f;
@@ -318,7 +318,7 @@ namespace tween
                 return (a*pow(2,-10*t) * sin( (t*d-s)*(2*pi)/p ) + 1.f);
             }
 
-        case TYPE::ELASTICINOUT_01:
+        case TYPE::ELASTICINOUT:
             {
                 t/=d/2;
 
@@ -335,13 +335,13 @@ namespace tween
                 return postFix * sin( (t*d-s)*(2*pi)/p )*.5f + 1.f;
             }
 
-        case TYPE::EXPOIN_01:
+        case TYPE::EXPOIN:
             return pow(2, 10 * (t/d - 1));
 
-        case TYPE::EXPOOUT_01:
+        case TYPE::EXPOOUT:
             return 1.f - ( t == d ? 0 : pow(2, -10.f * (t/d)));
 
-        case TYPE::EXPOINOUT_01:
+        case TYPE::EXPOINOUT:
             t /= d/2;
             if (t < 1)
                 return 1.f/2 * pow(2, 10 * (t - 1));
@@ -349,90 +349,90 @@ namespace tween
             t--;
             return 1.f/2 * (-pow(2, -10 * t) + 2);
 
-        case TYPE::QUADIN_01:
+        case TYPE::QUADIN:
             t /= d;
             return t*t;
 
-        case TYPE::QUADOUT_01:
+        case TYPE::QUADOUT:
             t /= d;
             return (2.f - t) * t;
 
-        case TYPE::QUADINOUT_01:
+        case TYPE::QUADINOUT:
             t /= d/2;
             if(t < 1)
                 return (1.f/2*t*t);
             t--;
             return -1.f/2 * (t*(t-2) - 1);
 
-        case TYPE::CUBICIN_01:
+        case TYPE::CUBICIN:
             t /= d;
             return t*t*t;
 
-        case TYPE::CUBICOUT_01:
+        case TYPE::CUBICOUT:
             t /= d;
             t--;
             return (1.f + t*t*t);
 
-        case TYPE::CUBICINOUT_01:
+        case TYPE::CUBICINOUT:
             t /= d/2;
             if (t < 1)
                 return 1.f/2*t*t*t;
             t -= 2;
             return 1.f/2*(t*t*t + 2);
 
-        case TYPE::QUARTIN_01:
+        case TYPE::QUARTIN:
             t /= d;
             return t*t*t*t;
 
-        case TYPE::QUARTOUT_01:
+        case TYPE::QUARTOUT:
             t /= d;
             t--;
             return (1.f - t*t*t*t);
 
-        case TYPE::QUARTINOUT_01:
+        case TYPE::QUARTINOUT:
             t /= d/2;
             if(t < 1)
                 return 1.f/2*t*t*t*t;
             t -= 2;
             return -1.f/2 * (t*t*t*t - 2);
 
-        case TYPE::QUINTIN_01:
+        case TYPE::QUINTIN:
             t /= d;
             return t*t*t*t*t;
 
-        case TYPE::QUINTOUT_01:
+        case TYPE::QUINTOUT:
             t /= d;
             t--;
             return (1.f + t*t*t*t*t);
 
-        case TYPE::QUINTINOUT_01:
+        case TYPE::QUINTINOUT:
             t /= d/2;
             if(t < 1)
                 return 1.f/2*t*t*t*t*t;
             t -= 2;
             return 1.f/2*(t*t*t*t*t + 2);
 
-        case TYPE::SINEIN_01:
+        case TYPE::SINEIN:
             return 1.f - cos(t/d * (pi/2));
 
-        case TYPE::SINEOUT_01:
+        case TYPE::SINEOUT:
             return sin(t/d * (pi/2));
 
-        case TYPE::SINEINOUT_01:
+        case TYPE::SINEINOUT:
             return -1.f/2 * (cos(pi*t/d) - 1);
 
-        case TYPE::SINESQUARE_01: {
+        case TYPE::SINESQUARE: {
             double A = sin(0.5f*(t/d)*pi);
             return A*A;
         }
 
-        case TYPE::EXPONENTIAL_01:
+        case TYPE::EXPONENTIAL:
             return 1/(1+exp(6-12*(t/d)));
 
-        case TYPE::SCHUBRING1_01:
+        case TYPE::SCHUBRING1:
             return t /= d, 2*(t+(0.5f-t)*abs(0.5f-t))-0.5f;
 
-        case TYPE::SCHUBRING2_01:
+        case TYPE::SCHUBRING2:
             {
                 t /= d;
                 double p1pass= 2*(t+(0.5f-t)*abs(0.5f-t))-0.5f;
@@ -441,7 +441,7 @@ namespace tween
                 return pAvg;
             }
 
-        case TYPE::SCHUBRING3_01:
+        case TYPE::SCHUBRING3:
             {
                 t /= d;
                 double p1pass= 2*(t+(0.5f-t)*abs(0.5f-t))-0.5f;
@@ -457,47 +457,47 @@ namespace tween
 #   define $tween_xmacro(...) \
     $tween( undefined, UNDEFINED ) \
     \
-    $tween( linear, LINEAR_01 ) \
-    $tween( quadin, QUADIN_01 ) \
-    $tween( quadout, QUADOUT_01 ) \
-    $tween( quadinout, QUADINOUT_01 ) \
-    $tween( cubicin, CUBICIN_01 ) \
-    $tween( cubicout, CUBICOUT_01 ) \
-    $tween( cubicinout, CUBICINOUT_01 ) \
-    $tween( quartin, QUARTIN_01 ) \
-    $tween( quartout, QUARTOUT_01 ) \
-    $tween( quartinout, QUARTINOUT_01 ) \
-    $tween( quintin, QUINTIN_01 ) \
-    $tween( quintout, QUINTOUT_01 ) \
-    $tween( quintinout, QUINTINOUT_01 ) \
-    $tween( sinein, SINEIN_01 ) \
-    $tween( sineout, SINEOUT_01 ) \
-    $tween( sineinout, SINEINOUT_01 ) \
-    $tween( expoin, EXPOIN_01 ) \
-    $tween( expoout, EXPOOUT_01 ) \
-    $tween( expoinout, EXPOINOUT_01 ) \
-    $tween( circin, CIRCIN_01 ) \
-    $tween( circout, CIRCOUT_01 ) \
-    $tween( circinout, CIRCINOUT_01 ) \
-    $tween( elasticin, ELASTICIN_01 ) \
-    $tween( elasticout, ELASTICOUT_01 ) \
-    $tween( elasticinout, ELASTICINOUT_01 ) \
-    $tween( backin, BACKIN_01 ) \
-    $tween( backout, BACKOUT_01 ) \
-    $tween( backinout, BACKINOUT_01 ) \
-    $tween( bouncein, BOUNCEIN_01 ) \
-    $tween( bounceout, BOUNCEOUT_01 ) \
-    $tween( bounceinout, BOUNCEINOUT_01 ) \
+    $tween( linear, LINEAR ) \
+    $tween( quadin, QUADIN ) \
+    $tween( quadout, QUADOUT ) \
+    $tween( quadinout, QUADINOUT ) \
+    $tween( cubicin, CUBICIN ) \
+    $tween( cubicout, CUBICOUT ) \
+    $tween( cubicinout, CUBICINOUT ) \
+    $tween( quartin, QUARTIN ) \
+    $tween( quartout, QUARTOUT ) \
+    $tween( quartinout, QUARTINOUT ) \
+    $tween( quintin, QUINTIN ) \
+    $tween( quintout, QUINTOUT ) \
+    $tween( quintinout, QUINTINOUT ) \
+    $tween( sinein, SINEIN ) \
+    $tween( sineout, SINEOUT ) \
+    $tween( sineinout, SINEINOUT ) \
+    $tween( expoin, EXPOIN ) \
+    $tween( expoout, EXPOOUT ) \
+    $tween( expoinout, EXPOINOUT ) \
+    $tween( circin, CIRCIN ) \
+    $tween( circout, CIRCOUT ) \
+    $tween( circinout, CIRCINOUT ) \
+    $tween( elasticin, ELASTICIN ) \
+    $tween( elasticout, ELASTICOUT ) \
+    $tween( elasticinout, ELASTICINOUT ) \
+    $tween( backin, BACKIN ) \
+    $tween( backout, BACKOUT ) \
+    $tween( backinout, BACKINOUT ) \
+    $tween( bouncein, BOUNCEIN ) \
+    $tween( bounceout, BOUNCEOUT ) \
+    $tween( bounceinout, BOUNCEINOUT ) \
     \
-    $tween( sinesquare, SINESQUARE_01 ) \
-    $tween( exponential, EXPONENTIAL_01 ) \
+    $tween( sinesquare, SINESQUARE ) \
+    $tween( exponential, EXPONENTIAL ) \
     \
-    $tween( terrys1, SCHUBRING1_01 ) \
-    $tween( terrys2, SCHUBRING2_01 ) \
-    $tween( terrys3, SCHUBRING3_01 ) \
+    $tween( terrys1, SCHUBRING1 ) \
+    $tween( terrys2, SCHUBRING2 ) \
+    $tween( terrys3, SCHUBRING3 ) \
     \
-    $tween( swing, SWING_01 ) \
-    $tween( sinpi2, SINPI2_01 ) 
+    $tween( swing, SWING ) \
+    $tween( sinpi2, SINPI2 ) 
 
     // interface for tweeners; includes memoization
 #   define $tween(fn,type) \

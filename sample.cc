@@ -1,20 +1,41 @@
+#include <cmath>
+#include <limits>
+#include <map>
+#include <sstream>
+#include <string>
+#include <string>
+#include <vector>
+#include <vector>
+
+std::string report( const std::vector<int> &easings, int W = 80, int H = 20, bool use_blur = true );
+
 #include <iostream>
 #include "tween.hpp"
 
+int main( int argc, const char **argv ) {
+    std::vector<int> type;
+    if( argc <= 1 ) {
+        type.push_back( tween::LINEAR );
+    } else {
+        for( int i = 1; i < argc; ++i ) {
+            int t = std::strtol( argv[i], 0, 0 );
+            while( t >=  tween::TOTAL ) t -= tween::TOTAL;
+            while( t <= -tween::TOTAL ) t += tween::TOTAL;
+            type.push_back( t );
+        }        
+    }
+    std::cout << report( type ) << std::endl;
+}
 
-#include <string>
-#include <vector>
-#include <map>
-#include <limits>
-#include <sstream>
-#include <cmath>
 
-std::string report( const std::vector<int> &easings, int W = 80, int H = 20, bool use_blur = true ) {
+
+
+std::string report( const std::vector<int> &easings, int W, int H, bool use_blur ) {
     auto fn = [&]( float t01 ) -> double {
         float v = 1;
         for( auto &easing : easings ) {
             if( easing >= 0 ) {
-                v *= tween::ease( easing, t01 ); //tween::in( t01, tween::acelbreak ); //
+                v *= tween::ease( easing, t01 ); //tween::inout( t01, tween::bouncein );
             }
             else
                 v -= tween::ease( -easing, t01 );
@@ -145,19 +166,4 @@ std::string report( const std::vector<int> &easings, int W = 80, int H = 20, boo
            << "Cur: " << current << std::endl;
 
     return (header.str().empty() ? header.str() : header.str().substr( 2 )) + "\n" + body.str() + footer.str();
-}
-
-int main( int argc, const char **argv ) {
-    std::vector<int> type;
-    if( argc <= 1 ) {
-        type.push_back( tween::LINEAR_01 );
-    } else {
-        for( int i = 1; i < argc; ++i ) {
-            int t = std::strtol( argv[i], 0, 0 );
-            while( t >=  tween::TOTAL ) t -= tween::TOTAL;
-            while( t <= -tween::TOTAL ) t += tween::TOTAL;
-            type.push_back( t );
-        }        
-    }
-    std::cout << report( type ) << std::endl;
 }

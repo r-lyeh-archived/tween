@@ -20,7 +20,7 @@ value = tween::bouncein( t01 ) * tween::quadin( t01 ); // -> 0.0585937
 ## possible output
 ```
 $tween: ./sample.out 28
-BOUNCEIN_01
+BOUNCEIN
 ------------------------------------------------------------------------+$#####*     1
                                                                      +*$$******$     0
                                                                    +*$***$$$$$*+     0
@@ -45,7 +45,7 @@ $$$$$$$$$$$$******$$$$$$*$$*+               +*$**$$$*+                          
 Min: 0; Max: 1; Avg: 0; Hit: 0; Lapse: 0s; Avg Hits/sec: 0; Cur: 0
 
 $tween: ./sample.out -1 28
-QUADIN_01* BOUNCEIN_01
+QUADIN* BOUNCEIN
 --------------------------------------------------------------------------------     1
                                                                                      0
                                                                                      0
@@ -154,47 +154,47 @@ const char *nameof( int type );
 
 enum TYPE
 {
-    LINEAR_01,
+    LINEAR,
 
-    QUADIN_01,          // t^2
-    QUADOUT_01,
-    QUADINOUT_01,
-    CUBICIN_01,         // t^3
-    CUBICOUT_01,
-    CUBICINOUT_01,
-    QUARTIN_01,         // t^4
-    QUARTOUT_01,
-    QUARTINOUT_01,
-    QUINTIN_01,         // t^5
-    QUINTOUT_01,
-    QUINTINOUT_01,
-    SINEIN_01,          // sin(t)
-    SINEOUT_01,
-    SINEINOUT_01,
-    EXPOIN_01,          // 2^t
-    EXPOOUT_01,
-    EXPOINOUT_01,
-    CIRCIN_01,          // sqrt(1-t^2)
-    CIRCOUT_01,
-    CIRCINOUT_01,
-    ELASTICIN_01,       // exponentially decaying sine wave
-    ELASTICOUT_01,
-    ELASTICINOUT_01,
-    BACKIN_01,          // overshooting cubic easing: (s+1)*t^3 - s*t^2
-    BACKOUT_01,
-    BACKINOUT_01,
-    BOUNCEIN_01,        // exponentially decaying parabolic bounce
-    BOUNCEOUT_01,
-    BOUNCEINOUT_01,
+    QUADIN,          // t^2
+    QUADOUT,
+    QUADINOUT,
+    CUBICIN,         // t^3
+    CUBICOUT,
+    CUBICINOUT,
+    QUARTIN,         // t^4
+    QUARTOUT,
+    QUARTINOUT,
+    QUINTIN,         // t^5
+    QUINTOUT,
+    QUINTINOUT,
+    SINEIN,          // sin(t)
+    SINEOUT,
+    SINEINOUT,
+    EXPOIN,          // 2^t
+    EXPOOUT,
+    EXPOINOUT,
+    CIRCIN,          // sqrt(1-t^2)
+    CIRCOUT,
+    CIRCINOUT,
+    ELASTICIN,       // exponentially decaying sine wave
+    ELASTICOUT,
+    ELASTICINOUT,
+    BACKIN,          // overshooting cubic easing: (s+1)*t^3 - s*t^2
+    BACKOUT,
+    BACKINOUT,
+    BOUNCEIN,        // exponentially decaying parabolic bounce
+    BOUNCEOUT,
+    BOUNCEINOUT,
 
-    SINESQUARE_01,      // gapjumper's
-    EXPONENTIAL_01,     // gapjumper's
-    SCHUBRING1_01,      // terry schubring's formula 1
-    SCHUBRING2_01,      // terry schubring's formula 2
-    SCHUBRING3_01,      // terry schubring's formula 3
+    SINESQUARE,      // gapjumper's
+    EXPONENTIAL,     // gapjumper's
+    SCHUBRING1,      // terry schubring's formula 1
+    SCHUBRING2,      // terry schubring's formula 2
+    SCHUBRING3,      // terry schubring's formula 3
 
-    SINPI2_01,          // tomas cepeda's
-    SWING_01,           // tomas cepeda's & lquery's
+    SINPI2,          // tomas cepeda's
+    SWING,           // tomas cepeda's & lquery's
 
     TOTAL,
     UNDEFINED
