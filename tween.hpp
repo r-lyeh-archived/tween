@@ -2,7 +2,7 @@
  * - rlyeh.
 
  * Based on code by Robert Penner, GapJumper, Terry Schubring, Jesus Gollonet,
- * Tomas Cepeda, John Resig, lQuery team. Thanks guys! :-)
+ * Tomas Cepeda, John Resig, lQuery team, Warren Moore. Thanks guys! :-)
  */
 
 #pragma once
@@ -163,6 +163,7 @@ namespace tween
         const double is_looped = 0;     /* used to be a param long time ago */
         const double d = 1.f;           /* used to be a param long time ago */ /* (d)estination, final time */
         const double pi = 3.1415926535897932384626433832795;
+        const double pi2 = 3.1415926535897932384626433832795 / 2;
 
         /* tiny optimizations { */
 
@@ -191,266 +192,287 @@ namespace tween
 
         /* } */
 
+        double p = t/d;
+
         switch( easetype )
         {
-        case TYPE::LINEAR: {
-                return t/d;
+            // Modeled after the line y = x
+            default:
+            case TYPE::LINEAR: {
+                return p;
             }
 
-        case TYPE::SWING: {
-                return ((-cos(pi * t / d) / 2) + 0.5);            
+            // Modeled after the parabola y = x^2
+            case TYPE::QUADIN: {
+                return p * p;
             }
 
-        case TYPE::SINPI2:
-            {
-                double fDelta = t/d;
-                return sin(fDelta * 0.5f * pi);
+            // Modeled after the parabola y = -x^2 + 2x
+            case TYPE::QUADOUT: {
+                return -(p * (p - 2));
             }
 
-        case TYPE::BACKIN:
-            {
-                double s = 1.70158f;
-                double postFix = t/=d;
-                return postFix * t * ((s + 1) * t - s);
-            }
-
-        case TYPE::BACKOUT:
-            {
-                double s = 1.70158f;
-                return 1.f * ((t = t/d-1)*t*((s+1)*t + s) + 1);
-            }
-
-        case TYPE::BACKINOUT:
-            {
-                double s = 1.70158f;
-                if ((t/=d/2) < 1)
-                    return 1.f/2*(t*t*(((s*=(1.525f))+1)*t - s));
-
-                double postFix = t-=2;
-                return 1.f/2*((postFix)*t*(((s*=(1.525f))+1)*t + s) + 2);
-            }
-
-#       define $BOUNCE(v) \
-        if ((t/=d) < (1/2.75f)) { \
-            v = 1.f*(7.5625f*t*t); \
-            } \
-        else if (t < (2/2.75f)) { \
-            double postFix = t-=(1.5f/2.75f); \
-            v = 1.f*(7.5625f*(postFix)*t + .75f); \
-            } \
-        else if (t < (2.5/2.75)) { \
-            double postFix = t-=(2.25f/2.75f); \
-            v = 1.f*(7.5625f*(postFix)*t + .9375f); \
-            } \
-        else { \
-            double postFix = t-=(2.625f/2.75f); \
-            v = 1.f*(7.5625f*(postFix)*t + .984375f); \
-            }
-
-        case TYPE::BOUNCEIN:
-            {
-                double v;
-                t = d-t;
-                $BOUNCE(v);
-                return 1.f - v;
-            }
-
-        case TYPE::BOUNCEOUT:
-            {
-                double v;
-                $BOUNCE(v);
-                return v;
-            }
-
-        case TYPE::BOUNCEINOUT:
-            {
-                double v;
-                if (t < d/2) {
-                    t = t*2;
-                    t = d-t;
-                    $BOUNCE(v);
-                    return (1.f - v) * .5f;
-                } else {
-                    t = t*2 -d;
-                    $BOUNCE(v);
-                    return v * .5f + 1.f*.5f;
+            // Modeled after the piecewise quadratic
+            // y = (1/2)((2x)^2)             ; [0, 0.5)
+            // y = -(1/2)((2x-1)*(2x-3) - 1) ; [0.5, 1]
+            case TYPE::QUADINOUT: {
+                if(p < 0.5) {
+                    return 2 * p * p;
+                }
+                else {
+                    return (-2 * p * p) + (4 * p) - 1;
                 }
             }
 
-#       undef $BOUNCE
-
-        case TYPE::CIRCIN:
-            t /= d;
-            return 1.f - sqrt(1 - t*t);
-
-        case TYPE::CIRCOUT:
-            t /= d;
-            t--;
-            return sqrt(1 - t*t);
-
-        case TYPE::CIRCINOUT:
-            t /= d/2;
-            if(t < 1)
-                return -1.f/2 * (sqrt(1 - t*t) - 1);
-
-            t-=2;
-            return 1.f/2 * (sqrt(1 - t*t) + 1);
-
-
-        case TYPE::ELASTICIN:
-            {
-                t/=d;
-
-                double p=d*.3f;
-                double a=1.f;
-                double s=p/4;
-                double postFix =a*pow(2,10*(t-=1)); // this is a fix, again, with post-increment operators
-
-                return -(postFix * sin((t*d-s)*(2*pi)/p ));
+            // Modeled after the cubic y = x^3
+            case TYPE::CUBICIN: {
+                return p * p * p;
             }
 
-        case TYPE::ELASTICOUT:
-            {
-                double p=d*.3f;
-                double a=1.f;
-                double s=p/4;
-
-                return (a*pow(2,-10*t) * sin( (t*d-s)*(2*pi)/p ) + 1.f);
+            // Modeled after the cubic y = (x - 1)^3 + 1
+            case TYPE::CUBICOUT: {
+                double f = (p - 1);
+                return f * f * f + 1;
             }
 
-        case TYPE::ELASTICINOUT:
-            {
-                t/=d/2;
-
-                double p=d*(.3f*1.5f);
-                double a=1.f;
-                double s=p/4;
-
-                if (t < 1) {
-                    double postFix =a*pow(2,10*(t-=1)); // postIncrement is evil
-                    return -.5f*(postFix* sin( (t*d-s)*(2*pi)/p ));
+            // Modeled after the piecewise cubic
+            // y = (1/2)((2x)^3)       ; [0, 0.5)
+            // y = (1/2)((2x-2)^3 + 2) ; [0.5, 1]
+            case TYPE::CUBICINOUT: {
+                if(p < 0.5) {
+                    return 4 * p * p * p;
                 }
-
-                double postFix =  a*pow(2,-10*(t-=1)); // postIncrement is evil
-                return postFix * sin( (t*d-s)*(2*pi)/p )*.5f + 1.f;
+                else {
+                    double f = ((2 * p) - 2);
+                    return 0.5 * f * f * f + 1;
+                }
             }
 
-        case TYPE::EXPOIN:
-            return pow(2, 10 * (t/d - 1));
+            // Modeled after the quartic x^4
+            case TYPE::QUARTIN: {
+                return p * p * p * p;
+            }
 
-        case TYPE::EXPOOUT:
-            return 1.f - ( t == d ? 0 : pow(2, -10.f * (t/d)));
+            // Modeled after the quartic y = 1 - (x - 1)^4
+            case TYPE::QUARTOUT: {
+                double f = (p - 1);
+                return f * f * f * (1 - p) + 1;
+            }
 
-        case TYPE::EXPOINOUT:
-            t /= d/2;
-            if (t < 1)
-                return 1.f/2 * pow(2, 10 * (t - 1));
+            // Modeled after the piecewise quartic
+            // y = (1/2)((2x)^4)        ; [0, 0.5)
+            // y = -(1/2)((2x-2)^4 - 2) ; [0.5, 1]
+            case TYPE::QUARTINOUT:  {
+                if(p < 0.5) {
+                    return 8 * p * p * p * p;
+                }
+                else {
+                    double f = (p - 1);
+                    return -8 * f * f * f * f + 1;
+                }
+            }
 
-            t--;
-            return 1.f/2 * (-pow(2, -10 * t) + 2);
+            // Modeled after the quintic y = x^5
+            case TYPE::QUINTIN:  {
+                return p * p * p * p * p;
+            }
 
-        case TYPE::QUADIN:
-            t /= d;
-            return t*t;
+            // Modeled after the quintic y = (x - 1)^5 + 1
+            case TYPE::QUINTOUT:  {
+                double f = (p - 1);
+                return f * f * f * f * f + 1;
+            }
 
-        case TYPE::QUADOUT:
-            t /= d;
-            return (2.f - t) * t;
+            // Modeled after the piecewise quintic
+            // y = (1/2)((2x)^5)       ; [0, 0.5)
+            // y = (1/2)((2x-2)^5 + 2) ; [0.5, 1]
+            case TYPE::QUINTINOUT:  {
+                if(p < 0.5) {
+                    return 16 * p * p * p * p * p;
+                }
+                else {
+                    double f = ((2 * p) - 2);
+                    return  0.5 * f * f * f * f * f + 1;
+                }
+            }
 
-        case TYPE::QUADINOUT:
-            t /= d/2;
-            if(t < 1)
-                return (1.f/2*t*t);
-            t--;
-            return -1.f/2 * (t*(t-2) - 1);
+            // Modeled after quarter-cycle of sine wave
+            case TYPE::SINEIN: {
+                return sin((p - 1) * pi2) + 1;
+            }
 
-        case TYPE::CUBICIN:
-            t /= d;
-            return t*t*t;
+            // Modeled after quarter-cycle of sine wave (different phase)
+            case TYPE::SINEOUT: {
+                return sin(p * pi2);
+            }
 
-        case TYPE::CUBICOUT:
-            t /= d;
-            t--;
-            return (1.f + t*t*t);
+            // Modeled after half sine wave
+            case TYPE::SINEINOUT: {
+                return 0.5 * (1 - cos(p * pi));
+            }
 
-        case TYPE::CUBICINOUT:
-            t /= d/2;
-            if (t < 1)
-                return 1.f/2*t*t*t;
-            t -= 2;
-            return 1.f/2*(t*t*t + 2);
+            // Modeled after shifted quadrant IV of unit circle
+            case TYPE::CIRCIN: {
+                return 1 - sqrt(1 - (p * p));
+            }
 
-        case TYPE::QUARTIN:
-            t /= d;
-            return t*t*t*t;
+            // Modeled after shifted quadrant II of unit circle
+            case TYPE::CIRCOUT: {
+                return sqrt((2 - p) * p);
+            }
 
-        case TYPE::QUARTOUT:
-            t /= d;
-            t--;
-            return (1.f - t*t*t*t);
+            // Modeled after the piecewise circular function
+            // y = (1/2)(1 - sqrt(1 - 4x^2))           ; [0, 0.5)
+            // y = (1/2)(sqrt(-(2x - 3)*(2x - 1)) + 1) ; [0.5, 1]
+            case TYPE::CIRCINOUT: {
+                if(p < 0.5) {
+                    return 0.5 * (1 - sqrt(1 - 4 * (p * p)));
+                }
+                else {
+                    return 0.5 * (sqrt(-((2 * p) - 3) * ((2 * p) - 1)) + 1);
+                }
+            }
 
-        case TYPE::QUARTINOUT:
-            t /= d/2;
-            if(t < 1)
-                return 1.f/2*t*t*t*t;
-            t -= 2;
-            return -1.f/2 * (t*t*t*t - 2);
+            // Modeled after the exponential function y = 2^(10(x - 1))
+            case TYPE::EXPOIN: {
+                return (p == 0.0) ? p : pow(2, 10 * (p - 1));
+            }
 
-        case TYPE::QUINTIN:
-            t /= d;
-            return t*t*t*t*t;
+            // Modeled after the exponential function y = -2^(-10x) + 1
+            case TYPE::EXPOOUT: {
+                return (p == 1.0) ? p : 1 - pow(2, -10 * p);
+            }
 
-        case TYPE::QUINTOUT:
-            t /= d;
-            t--;
-            return (1.f + t*t*t*t*t);
+            // Modeled after the piecewise exponential
+            // y = (1/2)2^(10(2x - 1))         ; [0,0.5)
+            // y = -(1/2)*2^(-10(2x - 1))) + 1 ; [0.5,1]
+            case TYPE::EXPOINOUT: {
+                if(p == 0.0 || p == 1.0) return p;
+                
+                if(p < 0.5) {
+                    return 0.5 * pow(2, (20 * p) - 10);
+                }
+                else {
+                    return -0.5 * pow(2, (-20 * p) + 10) + 1;
+                }
+            }
 
-        case TYPE::QUINTINOUT:
-            t /= d/2;
-            if(t < 1)
-                return 1.f/2*t*t*t*t*t;
-            t -= 2;
-            return 1.f/2*(t*t*t*t*t + 2);
+            // Modeled after the damped sine wave y = sin(13pi/2*x)*pow(2, 10 * (x - 1))
+            case TYPE::ELASTICIN: {
+                return sin(13 * pi2 * p) * pow(2, 10 * (p - 1));
+            }
 
-        case TYPE::SINEIN:
-            return 1.f - cos(t/d * (pi/2));
+            // Modeled after the damped sine wave y = sin(-13pi/2*(x + 1))*pow(2, -10x) + 1
+            case TYPE::ELASTICOUT: {
+                return sin(-13 * pi2 * (p + 1)) * pow(2, -10 * p) + 1;
+            }
 
-        case TYPE::SINEOUT:
-            return sin(t/d * (pi/2));
+            // Modeled after the piecewise exponentially-damped sine wave:
+            // y = (1/2)*sin(13pi/2*(2*x))*pow(2, 10 * ((2*x) - 1))      ; [0,0.5)
+            // y = (1/2)*(sin(-13pi/2*((2x-1)+1))*pow(2,-10(2*x-1)) + 2) ; [0.5, 1]
+            case TYPE::ELASTICINOUT: {
+                if(p < 0.5) {
+                    return 0.5 * sin(13 * pi2 * (2 * p)) * pow(2, 10 * ((2 * p) - 1));
+                }
+                else {
+                    return 0.5 * (sin(-13 * pi2 * ((2 * p - 1) + 1)) * pow(2, -10 * (2 * p - 1)) + 2);
+                }
+            }
 
-        case TYPE::SINEINOUT:
-            return -1.f/2 * (cos(pi*t/d) - 1);
+            // Modeled (originally) after the overshooting cubic y = x^3-x*sin(x*pi)
+            case TYPE::BACKIN: { /*
+                return p * p * p - p * sin(p * pi); */
+                double s = 1.70158f;
+                return p * p * ((s + 1) * p - s);
+            }
 
-        case TYPE::SINESQUARE: {
-            double A = sin(0.5f*(t/d)*pi);
-            return A*A;
-        }
+            // Modeled (originally) after overshooting cubic y = 1-((1-x)^3-(1-x)*sin((1-x)*pi))
+            case TYPE::BACKOUT: { /*
+                double f = (1 - p);
+                return 1 - (f * f * f - f * sin(f * pi)); */
+                double s = 1.70158f;
+                return --p, 1.f * (p*p*((s+1)*p + s) + 1);
+            }
 
-        case TYPE::EXPONENTIAL:
-            return 1/(1+exp(6-12*(t/d)));
+            // Modeled (originally) after the piecewise overshooting cubic function:
+            // y = (1/2)*((2x)^3-(2x)*sin(2*x*pi))           ; [0, 0.5)
+            // y = (1/2)*(1-((1-x)^3-(1-x)*sin((1-x)*pi))+1) ; [0.5, 1]
+            case TYPE::BACKINOUT: { /*
+                if(p < 0.5) {
+                    double f = 2 * p;
+                    return 0.5 * (f * f * f - f * sin(f * pi));
+                }
+                else {
+                    double f = (1 - (2*p - 1));
+                    return 0.5 * (1 - (f * f * f - f * sin(f * pi))) + 0.5;
+                } */
+                double s = 1.70158f * 1.525f;
+                if (p < 0.5) {
+                    return p *= 2, 0.5 * p * p * (p*s+p-s);
+                }
+                else {
+                    return p = p * 2 - 2, 0.5 * (2 + p*p*(p*s+p+s));
+                }
+            }
 
-        case TYPE::SCHUBRING1:
-            return t /= d, 2*(t+(0.5f-t)*abs(0.5f-t))-0.5f;
+#           define tween$bounceout(p) ( \
+                (p) < 4/11.0 ? (121 * (p) * (p))/16.0 : \
+                (p) < 8/11.0 ? (363/40.0 * (p) * (p)) - (99/10.0 * (p)) + 17/5.0 : \
+                (p) < 9/10.0 ? (4356/361.0 * (p) * (p)) - (35442/1805.0 * (p)) + 16061/1805.0 \
+                           : (54/5.0 * (p) * (p)) - (513/25.0 * (p)) + 268/25.0 )
 
-        case TYPE::SCHUBRING2:
-            {
-                t /= d;
-                double p1pass= 2*(t+(0.5f-t)*abs(0.5f-t))-0.5f;
+            case TYPE::BOUNCEIN: {
+                return 1 - tween$bounceout(1 - p);
+            }
+
+            case TYPE::BOUNCEOUT: {
+                return tween$bounceout(p);
+            }
+
+            case TYPE::BOUNCEINOUT: {
+                if(p < 0.5) {
+                    return 0.5 * (1 - tween$bounceout(1 - p * 2));
+                }
+                else {
+                    return 0.5 * tween$bounceout((p * 2 - 1)) + 0.5;
+                }
+            }
+
+#           undef tween$bounceout
+
+            case TYPE::SINESQUARE: {
+                double A = sin((p)*pi2);
+                return A*A;
+            }
+
+            case TYPE::EXPONENTIAL: {
+                return 1/(1+exp(6-12*(p)));                
+            }
+
+            case TYPE::SCHUBRING1: {
+                return 2*(p+(0.5f-p)*abs(0.5f-p))-0.5f;                
+            }
+
+            case TYPE::SCHUBRING2: {
+                double p1pass= 2*(p+(0.5f-p)*abs(0.5f-p))-0.5f;
                 double p2pass= 2*(p1pass+(0.5f-p1pass)*abs(0.5f-p1pass))-0.5f;
                 double pAvg=(p1pass+p2pass)/2;
                 return pAvg;
             }
 
-        case TYPE::SCHUBRING3:
-            {
-                t /= d;
-                double p1pass= 2*(t+(0.5f-t)*abs(0.5f-t))-0.5f;
+            case TYPE::SCHUBRING3: {
+                double p1pass= 2*(p+(0.5f-p)*abs(0.5f-p))-0.5f;
                 double p2pass= 2*(p1pass+(0.5f-p1pass)*abs(0.5f-p1pass))-0.5f;
                 return p2pass;
             }
 
-        default:
-            return 0;
+            case TYPE::SWING: {
+                return ((-cos(pi * p) * 0.5) + 0.5);
+            }
+
+            case TYPE::SINPI2: {
+                return sin(p * pi2);
+            }
         }
     }
 
