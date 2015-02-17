@@ -1,4 +1,4 @@
-tween
+tween <a href="https://travis-ci.org/r-lyeh/tween"><img src="https://api.travis-ci.org/r-lyeh/tween.svg?branch=master" align="right" /></a>
 =====
 
 - Tween is a lightweight easing library. Written in C++03.
