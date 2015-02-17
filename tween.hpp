@@ -13,84 +13,84 @@ namespace tween
     // public API 
 
     // basics f(t) = t ; memoized
-    double linear( double dt01 );
+    // double linear( double dt01 );
 
     // penner's f(t) = t^2 ; memoized
-    double quadin( double dt01 );
-    double quadout( double dt01 );
-    double quadinout( double dt01 );
+    // double quadin( double dt01 );
+    // double quadout( double dt01 );
+    // double quadinout( double dt01 );
 
     // penner's f(t) = t^3 ; memoized
-    double cubicin( double dt01 );
-    double cubicout( double dt01 );
-    double cubicinout( double dt01 );
+    // double cubicin( double dt01 );
+    // double cubicout( double dt01 );
+    // double cubicinout( double dt01 );
 
     // penner's f(t) = t^4 ; memoized
-    double quartin( double dt01 );
-    double quartout( double dt01 );
-    double quartinout( double dt01 );
+    // double quartin( double dt01 );
+    // double quartout( double dt01 );
+    // double quartinout( double dt01 );
 
     // penner's f(t) = t^5 ; memoized
-    double quintin( double dt01 );
-    double quintout( double dt01 );
-    double quintinout( double dt01 );
+    // double quintin( double dt01 );
+    // double quintout( double dt01 );
+    // double quintinout( double dt01 );
 
     // penner's f(t) = sin(t) ; memoized
-    double sinein( double dt01 );
-    double sineout( double dt01 );
-    double sineinout( double dt01 );
+    // double sinein( double dt01 );
+    // double sineout( double dt01 );
+    // double sineinout( double dt01 );
 
     // penner's f(t) = 2^t ; memoized
-    double expoin( double dt01 );
-    double expoout( double dt01 );
-    double expoinout( double dt01 );
+    // double expoin( double dt01 );
+    // double expoout( double dt01 );
+    // double expoinout( double dt01 );
 
     // penner's f(t) = sqrt(1-t^2) ; memoized
-    double circin( double dt01 );
-    double circout( double dt01 );
-    double circinout( double dt01 );
+    // double circin( double dt01 );
+    // double circout( double dt01 );
+    // double circinout( double dt01 );
 
     // penner's exponentially decaying sine wave ; memoized
-    double elasticin( double dt01 );
-    double elasticout( double dt01 );
-    double elasticinout( double dt01 );
+    // double elasticin( double dt01 );
+    // double elasticout( double dt01 );
+    // double elasticinout( double dt01 );
 
     // penner's overshooting cubic easing f(t) = (s+1)*t^3 - s*t^2 ; memoized
-    double backin( double dt01 );
-    double backout( double dt01 );
-    double backinout( double dt01 );
+    // double backin( double dt01 );
+    // double backout( double dt01 );
+    // double backinout( double dt01 );
 
     // penner's exponentially decaying parabolic bounce ; memoized
-    double bouncein( double dt01 );
-    double bounceout( double dt01 );
-    double bounceinout( double dt01 );
+    // double bouncein( double dt01 );
+    // double bounceout( double dt01 );
+    // double bounceinout( double dt01 );
 
     // gapjumper's ; memoized
-    double sinesquare( double dt01 );
-    double exponential( double dt01 );
+    // double sinesquare( double dt01 );
+    // double exponential( double dt01 );
 
     // terry schubring's ; memoized
-    double terrys1( double dt01 );
-    double terrys2( double dt01 );
-    double terrys3( double dt01 );
+    // double terrys1( double dt01 );
+    // double terrys2( double dt01 );
+    // double terrys3( double dt01 );
 
     // lQuery's and tomas cepeda's ; memoized
-    double swing( double dt01 );
-    double sinpi2( double dt01 );
+    // double swing( double dt01 );
+    // double sinpi2( double dt01 );
 
     // modifiers
-    double ping( double dt01 );
-    double pong( double dt01 );
-    double pingpong( double dt01 );
-    double pongping( double dt01 );
+    // double ping( double dt01 );
+    // double pong( double dt01 );
+    // double pingpong( double dt01 );
+    // double pongping( double dt01 );
 
-    template<typename EASE> double in( double dt01, EASE &ease );
-    template<typename EASE> double out( double dt01, EASE &ease );
-    template<typename EASE> double inout( double dt01, EASE &ease );
+    // template<typename EASE> double in( double dt01, EASE &ease );
+    // template<typename EASE> double out( double dt01, EASE &ease );
+    // template<typename EASE> double inout( double dt01, EASE &ease );
 
     // generics
-    double ease( int type, double dt01, bool memoized = false );
-    const char *nameof( int type );
+    // double ease( int type, double dt01, bool memoized = false );
+    // const char *nameof( int type );
 
     enum TYPE
     {
@@ -145,7 +145,7 @@ namespace tween
     // implementation
 
     static inline //constexpr
-    double ease( int easetype, double t, bool memoized )
+    double ease( int easetype, double t, bool memoized = false )
     {
         enum { LUT_SLOTS = 256 }; 
         static float lut[TOTAL][LUT_SLOTS], *init = 0; 
