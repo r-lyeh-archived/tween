@@ -7,7 +7,7 @@ tween <a href="https://travis-ci.org/r-lyeh/tween"><img src="https://api.travis-
 - Tween is cross-platform.
 - Tween is header-only.
 - Tween is tiny.
-- Tween is BOOST licensed.
+- Tween is zlib/libpng licensed.
 
 ## sample
 ```c++

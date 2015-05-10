@@ -1,4 +1,4 @@
-/* Tween, a lightweight easing library. boost licensed.
+/* Tween, a lightweight easing library. zlib/libpng licensed.
  * - rlyeh.
 
  * Based on code by Robert Penner, GapJumper, Terry Schubring, Jesus Gollonet,
