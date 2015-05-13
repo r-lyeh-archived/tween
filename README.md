@@ -205,4 +205,4 @@ enum TYPE
 
 - [juice it or lose it](https://www.youtube.com/watch?v=Fy0aCDmgnxg)
 - [easings](http://gizma.com/easing)
-
+- [easings](http://easings.net/)
